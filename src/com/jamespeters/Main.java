@@ -7,8 +7,9 @@ public class Main {
 	
 	static Scanner input;
 	static double a,b,c, lowerX, upperX, averageX, fa, fb, alphaY;
-	static int terms, rootType, equationType;
+	static int terms, rootType, equationType, question;
 	static double[] coefficients, powers;
+	static String[] questions;
 	
 	final static double ACCURACY = 0.001;
 
@@ -83,7 +84,13 @@ public class Main {
 			return total;
 		} else if(equationType==2){
 			//CUSTOM EQUATION GOES HERE
-			return (6*x)-Math.pow(3, x);
+			
+			if(question==0) return (x*x)-7;
+			if(question==1) return (x*x*x)-(7*x)+2;
+			if(question==2) return (x*x*x)+(2*x*x)-(8*x)-3;
+			if(question==3) return 1-2*(Math.sin(x));
+			if(question==4) return (x/2)-(1/x);
+			if(question==5) return (6*x)-Math.pow(3, x);
 		}
 		return 0;
 	}
@@ -93,7 +100,7 @@ public class Main {
 		System.out.println("** Setup");
 		System.out.println("**--------------------------------------------------**");
 		
-		notification("What type of equation do you want?", "1. Polynomial", "2. Custom");
+		notification("What type of equation do you want?", "1. Polynomial", "2. Question");
 		equationType = input.nextInt();
 		
 		if(equationType==1){
@@ -115,13 +122,26 @@ public class Main {
 			}
 			
 			for(int i = 0; i<terms; i++){
-				System.out.print(coefficients[i]+"x^"+powers[i]+" + ");
+				//System.out.print(coefficients[i]+"x^"+powers[i]+" + ");
 			}
 			System.out.println();
+			
+		} if(equationType==2){
+			questions = new String[6];
+			questions[0] = "1. x^2 - 7";
+			questions[1] = "2. x^3 - 7x + 2";
+			questions[2] = "3. x^3 + 2x^2 - 8x - 3";
+			questions[3] = "4. 1 - 2sin(x)";
+			questions[4] = "5. (x/2) - (1/x) , x>0";
+			questions[5] = "6. 6x - 3^x";
+			notification(questions[0],questions[1],questions[2],questions[3],questions[4],questions[5]);
+			question = input.nextInt()-1;
 		}
 		
 		notification("Which root do you want?", "1. Positive", "2. Negative", "3. Closest to x=0","4. Custom");
 		rootType = input.nextInt();
+		
+		notification("Equation: "+questions[question]);
 		
 		boundChooser();
 	}
@@ -184,6 +204,18 @@ public class Main {
 		System.out.println("**--------------------------------------------------**\r\n");
 	}
 	
+	public static void notification(String s, String s2, String s3, String s4, String s5, String s6){
+		System.out.println();
+		System.out.println("**--------------------------------------------------**");
+		System.out.println("** "+s);
+		System.out.println("** "+s2);
+		System.out.println("** "+s3);
+		System.out.println("** "+s4);
+		System.out.println("** "+s5);
+		System.out.println("** "+s6);
+		System.out.println("**--------------------------------------------------**\r\n");
+	}
+	
 	public static String FormatDouble(double d, int maxValue){
 		double rounded = Math.round(d*Math.pow(10, maxValue-2))/Math.pow(10, maxValue-2); 
 		DecimalFormat df = new DecimalFormat("#0.00");
@@ -213,7 +245,7 @@ public class Main {
 					break;
 				}
 			}
-			if(rootType==2||rootType==3){
+			else if(rootType==2||rootType==3){
 				if((polynomialEquation(i2)<=ACCURACY)&&(polynomialEquation(i2+1)>=-ACCURACY)){
 					lowerX = i2;
 					upperX = i2+1;
